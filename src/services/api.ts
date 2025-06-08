@@ -184,7 +184,6 @@ export const consultantsAPI = {
     }
     useAuthStore.getState().logout();
     Cookies.remove('pathpr_saas_token');
-    window.location.href = '/login';
     return response.data;
   },
   

@@ -17,12 +17,12 @@ const Login = () => {
   
   const navigate = useNavigate();
   const { toast } = useToast();
-  const login = useAuthStore((state) => state.login);
+
+  const {login} = useAuthStore();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
     try {
       const response = await authAPI.login(email, password);
       login(response.consultant, response.consultant.firmId as unknown as IConsultantFirm, response.token);
@@ -78,7 +78,7 @@ const Login = () => {
               />
             </div>
             <Button
-              type="submit"
+              type='submit'
               className="w-full"
               disabled={isLoading}
             >

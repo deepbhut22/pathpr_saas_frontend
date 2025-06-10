@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Step } from '@/types';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { IConsultant, IConsultantFirm, Step } from '@/types';
 import { getNextStep } from '@/utils/helpers';
 import { useUserFormDataStore } from '@/stores/userFormDataStore';
 import QuestionnaireLayout from '@/components/questionnaire/QuestionnaireLayout';
@@ -23,6 +23,8 @@ export default function Questionnaire() {
     const navigate = useNavigate();
     const [isValid, setIsValid] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const { firm, consultant } = useLocation().state as { firm: IConsultantFirm, consultant: IConsultant };
 
     const { setProfileComplete } = useUserFormDataStore();
     // console.log('Rendering step page');
@@ -46,11 +48,12 @@ export default function Questionnaire() {
             const nextStep = getNextStep(currentStep);
 
             if (nextStep) {
-                navigate(`/${params.slug}/data-form/${nextStep}/${params.token}`);
+                navigate(`/${params.slug}/data-form/${nextStep}/${params.token}`, { state: { firm: firm, consultant: consultant } });
             } else {
                 // This is the last step, mark profile as complete and redirect to report
                 setProfileComplete(true);
                 handleSave();
+                navigate(`/${params.slug}/client-success`, { replace: true });
                 // navigate('/');
             }
 
@@ -125,12 +128,20 @@ export default function Questionnaire() {
     return (
         <>
         <div className='bg-slate-950'>
-            <div className='bg-slate-900 border border-slate-700 p-6 flex justify-between items-center gap-2 mx-10 my-2'>
-                <div className='flex flex-col gap-2'>
-                    <h1 className='text-white text-2xl font-bold'>firm name</h1>
-                    <p className='text-white text-sm'>firm description</p>
+            <div className='bg-slate-900 border border-slate-700 py-4 px-2 flex justify-between gap-2 items-center'>
+                <div className='flex gap-2 items-center'>
+                    <img src={firm.logo} alt={firm.name} className='w-20 h-20 rounded-lg border-2 border-white' />
+                    <div className='flex flex-col gap-2'>
+                        <h1 className='text-white text-2xl font-bold'>{firm.name}</h1>
+                        <p className='text-white text-sm'>{consultant.displayName}</p>
+                    </div>
                 </div>
-                <p>logo</p>
+                    <div className='flex flex-col gap-1 items-end'>
+                        <p className='text-white text-lg font-bold'>{consultant.displayName}</p>
+                        <p className='text-gray-500 text-sm'>{consultant.displayEmail}</p>
+                        <p className='text-gray-500 text-sm'>{consultant.phone}</p>
+                        <p className='text-gray-500 text-sm'>{consultant.role} @{firm.name}</p>
+                    </div>
             </div>
             <QuestionnaireLayout
                 currentStep={currentStep}

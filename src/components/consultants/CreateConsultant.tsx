@@ -27,6 +27,7 @@ const ConsultantModal = ({ onBack, onSuccess }: ClientUpdateFormProps) => {
     const [formData, setFormData] = useState({
         email: '',
         role: '',
+        type: '',
     });
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -58,6 +59,7 @@ const ConsultantModal = ({ onBack, onSuccess }: ClientUpdateFormProps) => {
             setFormData({
                 email: '',
                 role: '',
+                type: '',
             });
             
             toast({
@@ -146,6 +148,25 @@ const ConsultantModal = ({ onBack, onSuccess }: ClientUpdateFormProps) => {
                                         <SelectItem value="consultant">Consultant</SelectItem>
                                         <SelectItem value="team_leader">Team Leader</SelectItem>
                                         <SelectItem value="owner">Owner</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
+                            <div>
+                                <Label htmlFor="type">Type</Label>
+                                <Select
+                                    value={formData.type}
+                                    onValueChange={(value) => handleInputChange('type', value)}
+                                    required
+
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select Type" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="consultant">Consultant</SelectItem>
+                                        <SelectItem value="lawyer">Lawyer</SelectItem>
+                                        {/* <SelectItem value="owner">Owner</SelectItem> */}
                                     </SelectContent>
                                 </Select>
                             </div>

@@ -48,9 +48,9 @@ const Sidebar = ({ firmSlug }: SidebarProps) => {
       },
       {
         name: 'Firm Settings',
-        href: `/${firmSlug}/settings`,
+        href: `/${firmSlug}/firm-settings`,
         icon: Settings,
-        current: location.pathname === `/${firmSlug}/settings`,
+        current: location.pathname === `/${firmSlug}/firm-settings`,
       },
       {
         name: 'Dashboard',

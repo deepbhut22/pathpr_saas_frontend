@@ -15,6 +15,9 @@ import ConsultantSettings from "./components/consultants/ConsultantSettings";
 import { useEffect } from "react";
 import GenericPopUp from "./components/PopUp/GenericPopUp";
 import ProfileCompletionPopup from "./components/PopUp/ProfileCompletionPopup";
+import FirmInfo from "./pages/FirmInfo";
+import FirmSettings from "./pages/FirmSettings";
+import ClientSuccessPage from "./pages/ClientSuccessPage";
 const queryClient = new QueryClient();
 
 // Protected Route component
@@ -94,7 +97,21 @@ const App = () => {
                   </ProtectedRoute>
                 }
               />
+
+              <Route
+                path="/:firmSlug/firm-settings"
+                element={
+                  <ProtectedRoute>
+                    <FirmSettings />
+                  </ProtectedRoute>
+                }
+              />
+              
             <Route path="/:slug/data-form/:step?/:token" element={<Questionnaire />} />
+
+            <Route path="/:slug/firm-info/:token" element={<FirmInfo />} />
+
+            <Route path="/:slug/client-success" element={<ClientSuccessPage />} />
 
             <Route path="*" element={<NotFound />} />
           </Routes>

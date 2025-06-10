@@ -14,8 +14,10 @@ import {
   IUserProfileModel,
   CreateUserProfileDto
 } from '@/types';
-import { toast } from 'sonner';   
+// import { useToast } from '@/hooks/use-toast';
 import { useAuthStore } from '@/stores/authStore';
+
+// const { toast } = useToast();
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://saasapi.pathpr.ca/api';
 // const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
@@ -62,12 +64,24 @@ export const authAPI = {
 export const firmAPI = {
   getFirmBySlug: async (slug: string): Promise<IConsultantFirm> => {
     const response = await api.get(`/firms/${slug}`);
-    return response.data;
+    return response.data.data;
   },
   
-  updateFirm: async (firmId: string, data: Partial<IConsultantFirm>): Promise<IConsultantFirm> => {
-    const response = await api.put(`/firms/${firmId}`, data);
-    return response.data;
+  updateFirm: async (data: Partial<IConsultantFirm>): Promise<IConsultantFirm> => {
+    try {
+      const response = await api.put(`/firms`, data);
+      if (response.status === 200) {
+        return response.data;
+      } else {
+        // toast({
+        //   title: "Error updating firm",
+        //   description: response.data.message
+        // });
+      }
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   },
 };
 
@@ -94,9 +108,10 @@ export const clientsAPI = {
         alert("Client updated successfully");
         return response.data;
       } else {
-        toast.error("Error updating client", {
-          description: response.data.message
-        });
+        // toast({
+        //   title: "Error updating client",
+        //   description: response.data.message
+        // });
         alert("Client updated successfully");
       }
       return response.data;
@@ -114,15 +129,21 @@ export const clientsAPI = {
       if (response.data.status === "success") {
         return response.data.link;
       } else {
-        toast.error("Error creating client", {
-          description: response.data.message
-        });
+        // toast({
+        //   title: "Error creating client",
+        //   description: response.data.message
+        // });
       }
       throw new Error(response.data.message);
     } catch (error) {
       console.error(error);
       throw error;
     }
+  },
+
+  getFirmAndConsultant: async (token: string): Promise<{ firm: IConsultantFirm, consultant: IConsultant }> => {
+    const response = await api.get(`/clients/get-firm-and-consultant/${token}`);
+    return response.data.data;
   },
 };
 

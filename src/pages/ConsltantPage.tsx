@@ -89,8 +89,8 @@ export default function ConstultantPage() {
             setViewMode('profile');
         } catch (error: any) {
             toast({
-                title: "Error loading client",
-                description: error.response?.data?.message || "Failed to load client details",
+                title: "Error loading consultant",
+                description: error.response?.data?.message || "Failed to load consultant details",
                 variant: "destructive",
             });
         }

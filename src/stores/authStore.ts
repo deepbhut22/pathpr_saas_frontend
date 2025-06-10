@@ -86,6 +86,10 @@ export const useAuthStore = create<AuthState>()(
       initializeApp: () => {
         const consultant = get().consultant;
 
+        if (!consultant) {
+          return;
+        }
+
         if (!isProfileCompleted(consultant)) {
           setTimeout(() => {
             get().updateIsProfileComletionPopupOpen(true);
@@ -102,7 +106,6 @@ export const useAuthStore = create<AuthState>()(
 );
 
 const isProfileCompleted = (consultant: IConsultant) => {
-  console.log(consultant);
   return (
     consultant.displayEmail && consultant.displayEmail !== "" &&
     consultant.phone && consultant.phone !== "" &&

@@ -144,7 +144,7 @@ const FirmInfo = () => {
                                     <span className="font-medium text-secondary-700">Description</span>
                                 </div>
                                 <p className="text-secondary-600 leading-relaxed pl-6">
-                                    {firm.description} thid is description
+                                    {firm.description}
                                 </p>
                             </div>
                         )}

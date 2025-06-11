@@ -10,6 +10,7 @@ import { toast } from "@/hooks/use-toast";
 import { IConsultant, IUserProfile, PaginatedResponse } from "@/types";
 import ConsultantModal from "@/components/consultants/CreateConsultant";
 import { useConsultantsStore } from "@/stores/consultantsStore";
+import ConsultantProfile from "@/components/consultants/ConsultantProfile";
 
 type ViewMode = string;
 
@@ -21,53 +22,56 @@ export default function ConstultantPage() {
     const [viewMode, setViewMode] = useState<ViewMode>('list');
 
 
-    const {
-        clients,
-        selectedClient,
-        loading,
-        pagination,
-        filters,
-        setClients,
-        setSelectedClient,
-        setLoading
-    } = useClientsStore();
+    // const {
+    //     clients,
+    //     selectedClient,
+    //     // loading,
+    //     // pagination,
+    //     // filters,
+    //     // setClients,
+    //     // setSelectedClient,
+    //     // setLoading
+    // } = useClientsStore();
 
     const { 
+        loading,
         consultants,
         selectedConsultant,
         setConsultants,
         setSelectedConsultant,
         setLoading: setConsultantsLoading,
-        filters: consultantsFilters,
-        setFilters: setConsultantsFilters,
-        pagination: consultantsPagination,
+        filters,
+        setFilters,
+        pagination,
     } = useConsultantsStore();
+    
+    const [consultantClients, setConsultantClients] = useState<IUserProfile[]>([]);
 
-    const loadClients = async () => {
-        setLoading(true);
-        try {
-            const response = await clientsAPI.getClients({
-                page: pagination.page,
-                limit: pagination.limit,
-                ...filters,
-            });
-            setClients(response as PaginatedResponse<IUserProfile>);
-        } catch (error: any) {
-            toast({
-                title: "Error loading clients",
-                description: error.response?.data?.message || "Failed to load clients",
-                variant: "destructive",
-            });
-        } finally {
-            setLoading(false);
-        }
-    };
+    // const loadClients = async () => {
+    //     setLoading(true);
+    //     try {
+    //         const response = await clientsAPI.getClients({
+    //             page: pagination.page,
+    //             limit: pagination.limit,
+    //             ...filters,
+    //         });
+    //         setClients(response as PaginatedResponse<IUserProfile>);
+    //     } catch (error: any) {
+    //         toast({
+    //             title: "Error loading clients",
+    //             description: error.response?.data?.message || "Failed to load clients",
+    //             variant: "destructive",
+    //         });
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
 
     const loadConsultants = async () => {
         setConsultantsLoading(true);
         try {
             const response = await consultantsAPI.getConsultants({
-                ...consultantsFilters,
+                ...filters,
             });
             setConsultants(response as PaginatedResponse<IConsultant>);
         } catch (error: any) {
@@ -84,9 +88,10 @@ export default function ConstultantPage() {
 
     const handleConsultantSelect = async (consultantId: string) => {
         try {
-            const consultant = await consultantsAPI.getConsultantById(consultantId);
-            setSelectedConsultant(consultant);
+            const response = await consultantsAPI.getConsultantById(consultantId);
+            setSelectedConsultant(response.consultant);
             setViewMode('profile');
+            setConsultantClients(response.clients);
         } catch (error: any) {
             toast({
                 title: "Error loading consultant",
@@ -106,9 +111,9 @@ export default function ConstultantPage() {
         }
     }, [firmSlug]);
 
-    useEffect(() => {
-        loadClients();
-    }, [pagination.page, pagination.limit, filters]);   
+    // useEffect(() => {
+    //     loadClients();
+    // }, [pagination.page, pagination.limit, filters]);   
 
     return (
         <div className="h-screen flex overflow-hidden bg-gray-100">
@@ -141,7 +146,7 @@ export default function ConstultantPage() {
                                     onCreateConsultant={handleCreateConsultant}
                                     consultants={consultants}
                                     loading={loading}
-                                    pagination={consultantsPagination}
+                                    pagination={pagination}
                                     onConsultantSelect={handleConsultantSelect}
                                     onRefresh={loadConsultants}
                                 />
@@ -150,6 +155,13 @@ export default function ConstultantPage() {
                                 <ConsultantModal
                                     onBack={() => setViewMode('list')}
                                     onSuccess={loadConsultants}
+                                />
+                            )}
+                            {viewMode === 'profile' && (
+                                <ConsultantProfile
+                                    consultant={selectedConsultant}
+                                    clients={consultantClients}
+                                    onBack={() => setViewMode('list')}
                                 />
                             )}
                         </div>

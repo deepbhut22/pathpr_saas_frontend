@@ -18,6 +18,7 @@ import ProfileCompletionPopup from "./components/PopUp/ProfileCompletionPopup";
 import FirmInfo from "./pages/FirmInfo";
 import FirmSettings from "./pages/FirmSettings";
 import ClientSuccessPage from "./pages/ClientSuccessPage";
+// import './App.css';
 const queryClient = new QueryClient();
 
 // Protected Route component

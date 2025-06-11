@@ -128,7 +128,7 @@ const ClientProfile = ({
                         </Badge>
                       </div>
                       <p className="text-sm text-gray-600">
-                        Generated on {new Date(report.createdAt).toLocaleDateString()}
+                        Generated on {new Date(report.createdAt).toLocaleDateString()} at {new Date(report.createdAt).toLocaleTimeString()}
                       </p>
                       <div className="pt-2">
                         <p className="text-sm font-medium text-blue-600">

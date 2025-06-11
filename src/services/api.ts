@@ -28,13 +28,13 @@ const api = axios.create({
 });
 
 // Request interceptor to add auth token
-api.interceptors.request.use((config) => {
-  const token = Cookies.get('pathpr_saas_token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+// api.interceptors.request.use((config) => {
+//   const token = Cookies.get('pathpr_saas_token');
+//   if (token) {
+//     config.headers.Authorization = `Bearer ${token}`;
+//   }
+//   return config;
+// });
 
 // Response interceptor for error handling
 api.interceptors.response.use(
@@ -167,7 +167,7 @@ export const reportsAPI = {
 export const consultantsAPI = {
   getConsultants: async (params: ConsultantFilters & { search?: string, role?: string, page?: number | 1, limit?: number | 10, sortBy?: string, sortOrder?: string }): Promise<PaginatedResponse<IConsultant>> => {
     const response = await api.get('/consultants/all-consultants', { params });
-    console.log(response);
+    // console.log(response);
     return response.data.data;
   },
 
@@ -182,9 +182,9 @@ export const consultantsAPI = {
     }
   },
   
-  getConsultantById: async (consultantId: string): Promise<IConsultant> => {
-    const response = await api.get(`/consultants/${consultantId}`);
-    return response.data;
+  getConsultantById: async (consultantId: string): Promise<{ consultant: IConsultant, clients: IUserProfile[] }> => {
+    const response = await api.get(`/consultants/get-consultant/${consultantId}`);
+    return response.data.data;
   },
   
   createConsultant: async (data: CreateConsultantDto): Promise<IConsultant> => {

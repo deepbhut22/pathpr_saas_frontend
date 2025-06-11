@@ -136,7 +136,7 @@ export default function QuestionnaireLayout({
 
         {/* Right: Action Buttons */}
         <div className="flex flex-col sm:flex-row sm:space-x-3 space-y-3 sm:space-y-0 w-full sm:w-auto">
-          {onSave && (
+          {/* {onSave && (
             <Button
               variant="secondary"
               onClick={onSave}
@@ -146,7 +146,7 @@ export default function QuestionnaireLayout({
             >
               Save Progress
             </Button>
-          )}
+          )} */}
 
           {nextStep ? (
             <Button

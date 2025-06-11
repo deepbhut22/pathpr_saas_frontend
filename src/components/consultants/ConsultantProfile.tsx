@@ -30,7 +30,7 @@ export default function ConsultantProfile({ consultant, clients, onBack }: Consu
                 <div className="w-full">
                     <div className="flex flex-col items-start gap-2 justify-start">
                         <h1 className="text-2xl font-bold text-gray-900">{clients.length} Clients associated with {consultant.displayName}</h1>
-                        <div className="flex flex-col items-start gap-2 justify-start overflow-x-auto w-full scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                        <div className="flex items-start gap-2 justify-start overflow-x-auto w-full scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
                             {clients.map((client) => (
                                 <div key={client._id} className="border-2 border-gray-300 p-4 rounded-md cursor-pointer flex flex-col items-start gap-2 justify-start">
                                     <p className="text-lg font-bold text-gray-900">{client.fullName}</p>

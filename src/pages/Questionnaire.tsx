@@ -63,7 +63,7 @@ export default function Questionnaire() {
 
     const handlePrevious = () => {
         const prevUrl = currentStep === 'basic' ? `/${params.slug}` : `/${params.slug}/data-form/${getPrevStep()}/${params.token}`;
-        navigate(prevUrl);
+        navigate(prevUrl, { state: { firm: firm, consultant: consultant } });
     };
 
     const handleSave = async () => {
@@ -150,6 +150,8 @@ export default function Questionnaire() {
                 onNext={handleNext}
                 onPrevious={handlePrevious}
                 onSave={handleSave}
+                consultant={consultant}
+                firm={firm}
             >
                 {renderStepContent()}
             </QuestionnaireLayout>

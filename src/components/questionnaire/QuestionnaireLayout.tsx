@@ -3,7 +3,7 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CheckCircle, XCircle } from 'lucide-react';
-import { Step } from '../../types';
+import { IConsultant, IConsultantFirm, Step } from '../../types';
 import { navigationSteps, getStepIndex, getNextStep, getPreviousStep } from '@/utils/helpers';
 import { Button } from '@/components/ui/button';
 import { isProfileComplete, useUserFormDataStore } from '@/stores/userFormDataStore';
@@ -16,7 +16,9 @@ interface QuestionnaireLayoutProps {
   onNext: () => void;
   onPrevious: () => void;
   onSave?: () => void;
-}
+  consultant: IConsultant;
+  firm: IConsultantFirm;
+  }
 
 export default function QuestionnaireLayout({
   children,
@@ -25,7 +27,9 @@ export default function QuestionnaireLayout({
   isSubmitting = false,
   onNext,
   onPrevious,
-  onSave
+  onSave,
+  consultant,
+  firm
 }: QuestionnaireLayoutProps) {
   const currentStepIndex = getStepIndex(currentStep);
   const navigate = useNavigate();
@@ -68,7 +72,7 @@ export default function QuestionnaireLayout({
         {navigationSteps.map((step, idx) => {
           return (
             <div 
-              onClick={() => navigate(`/${params.slug}/data-form/${step.id}/${params.token}`)}
+              onClick={() => navigate(`/${params.slug}/data-form/${step.id}/${params.token}`, { state: { firm: firm, consultant: consultant } })}
               key={step.id} 
               className={`bg-white border border-secondary-200 shadow-sm p-2 rounded-md flex justify-between items-center cursor-pointer hover:shadow-md transition-all duration-300 ${step.id === currentStep ? 'shadow-lg bg-gray-200' : ''}`}>
               {

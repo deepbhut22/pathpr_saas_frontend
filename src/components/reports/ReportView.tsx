@@ -25,7 +25,7 @@ const ReportView = ({ clientId, onBack, onOpenChat }: ReportViewProps) => {
     );
   }
 
-  const { content } = selectedReport;
+  const { content } = selectedReport;  
 
   const eligiblePrograms = content?.pnp?.pnpAssessment?.filter((program) => program.status === 'Eligible');
   const noEligiblePrograms = content?.pnp?.pnpAssessment?.filter((program) => program.status !== 'Eligible');
@@ -374,7 +374,7 @@ const ReportView = ({ clientId, onBack, onOpenChat }: ReportViewProps) => {
                     <h4 className="font-medium text-secondary-900 mb-3">Improve Your CRS Score</h4>
                     <ul className="space-y-3">
 
-                      {content?.nextSteps?.map((recommendation, index) => (
+                      {content?.recommendations?.result?.map((recommendation, index) => (
                         <li
                           key={`recommendation-${index}`}
                           className="flex items-start"
@@ -382,15 +382,15 @@ const ReportView = ({ clientId, onBack, onOpenChat }: ReportViewProps) => {
                           <div className="flex-shrink-0 h-5 w-5 bg-primary-500 rounded-full flex items-center justify-center text-white text-xs mr-3 mt-0.5">
                             {index + 1}
                           </div>
-                          <p className="text-secondary-600">
-                            <span className="font-medium text-secondary-900">{recommendation.question}</span> {recommendation.answer}
+                          <p className="text-secondary-600 text-sm">
+                            <span className="font-medium text-secondary-900">{recommendation.question}: <br ></br></span> {recommendation.answer}
                           </p>
                         </li>
                       ))}
                     </ul>
                   </div>
 
-                  <div className="border-t border-secondary-200 pt-4">
+                  {/* <div className="border-t border-secondary-200 pt-4">
                     <h4 className="font-medium text-secondary-900 mb-3">Required Documents</h4>
                     <ul className="space-y-2">
                       <li className="flex items-center">
@@ -418,9 +418,9 @@ const ReportView = ({ clientId, onBack, onOpenChat }: ReportViewProps) => {
                         <span className="text-secondary-600">Medical examination results</span>
                       </li>
                     </ul>
-                  </div>
+                  </div> */}
 
-                  <div className="border-t border-gray-200 pt-4">
+                  {/* <div className="border-t border-gray-200 pt-4">
                     <h4 className="font-medium text-secondary-900 mb-3">Timeline Estimate</h4>
                     <div className="bg-white rounded-lg p-4">
                       <div className="flex items-center justify-between mb-2">
@@ -455,7 +455,7 @@ const ReportView = ({ clientId, onBack, onOpenChat }: ReportViewProps) => {
                         <div className="bg-gray-600 h-2.5 rounded-full w-full"></div>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </CardContent>
             </Card>

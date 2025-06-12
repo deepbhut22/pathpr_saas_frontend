@@ -168,7 +168,7 @@ const FirmInfo = () => {
                                 </div>
                             )}
 
-                            <div className="flex items-center space-x-3 p-3 bg-secondary-50 rounded-lg">
+                            {/* <div className="flex items-center space-x-3 p-3 bg-secondary-50 rounded-lg">
                                 <Calendar className="w-5 h-5 text-secondary-500" />
                                 <div>
                                     <span className="text-sm font-medium text-secondary-700 block">With Pathpr From</span>
@@ -176,7 +176,7 @@ const FirmInfo = () => {
                                         {formatDate(firm.createdAt)}
                                     </span>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>

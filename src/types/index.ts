@@ -218,7 +218,12 @@ export interface IReportContent {
   };
   alternativePathways: any[];
   nextSteps: any[];
-  recommendations: any[];
+  recommendations: {
+    result: {
+    question: string;
+    answer: string;
+  }[];
+  };
   createdAt: Date;
   updatedAt: Date;
 }

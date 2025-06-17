@@ -124,6 +124,7 @@ export default function BasicInfo({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
+    console.log("here");
     
     if (name === 'age') {
       updateBasicInfo({ [name]: value ? parseInt(value) : null });

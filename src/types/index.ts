@@ -8,7 +8,7 @@ export interface IConsultantFirm {
   name: string;
   slug: string;
   description?: string;
-  logoUrl?: string;
+  logo?: string;
   websiteUrl?: string;
   createdAt: Date;
   updatedAt: Date;

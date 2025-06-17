@@ -18,7 +18,8 @@ import ProfileCompletionPopup from "./components/PopUp/ProfileCompletionPopup";
 import FirmInfo from "./pages/FirmInfo";
 import FirmSettings from "./pages/FirmSettings";
 import ClientSuccessPage from "./pages/ClientSuccessPage";
-// import './App.css';
+import ClientUpdateForm from "./components/clients/ClientUpdateForm";
+  // import './App.css';
 const queryClient = new QueryClient();
 
 // Protected Route component
@@ -113,6 +114,7 @@ const App = () => {
             <Route path="/:slug/firm-info/:token" element={<FirmInfo />} />
 
             <Route path="/:slug/client-success" element={<ClientSuccessPage />} />
+
 
             <Route path="*" element={<NotFound />} />
           </Routes>

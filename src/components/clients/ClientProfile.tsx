@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useReportsStore } from '@/stores/reportsStore';
 import { reportsAPI } from '@/services/api';
-import { IUserProfile } from '@/types';
+import { IUserProfile, IUserProfileModel } from '@/types';
 import { 
   ArrowLeft, 
   Edit, 
@@ -13,6 +13,7 @@ import {
   User, 
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useUserFormDataStore } from '@/stores/userFormDataStore';
 
 interface ClientProfileProps {
   client: IUserProfile;
@@ -33,10 +34,16 @@ const ClientProfile = ({
   const { toast } = useToast();
 
   useEffect(() => {
-    loadReports();
-    console.log(reports);
-    
+    loadReports();    
   }, [client._id]);
+
+
+  const { userProfile, setUserProfile } = useUserFormDataStore();
+
+  const handleEdit = () => {
+    setUserProfile(client.profileData as IUserProfileModel);
+    onEdit();
+  };
 
   const loadReports = async () => {
     setLoading(true);
@@ -79,7 +86,7 @@ const ClientProfile = ({
           </div>
         </div>
         <div className="flex space-x-2">
-          <Button onClick={onEdit} variant="outline">
+          <Button onClick={handleEdit} variant="outline">
             <Edit className="h-4 w-4 mr-2" />
             Update Profile
           </Button>

@@ -123,11 +123,12 @@ export default function Questionnaire() {
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        useUserFormDataStore.getState().resetUserProfile();
     }, []);
 
     return (
         <>
-        <div className='bg-slate-950'>
+        <div className='bg-white'>
             <div className='bg-slate-900 border border-slate-700 py-4 px-2 flex justify-between gap-2 items-center'>
                 <div className='flex gap-2 items-center'>
                     <img src={firm.logo} alt={firm.name} className='w-20 h-20 rounded-lg border-2 border-white' />
@@ -143,18 +144,20 @@ export default function Questionnaire() {
                         <p className='text-gray-500 text-sm'>{consultant.role} @{firm.name}</p>
                     </div>
             </div>
-            <QuestionnaireLayout
-                currentStep={currentStep}
-                isValid={isValid}
-                isSubmitting={isSubmitting}
-                onNext={handleNext}
-                onPrevious={handlePrevious}
-                onSave={handleSave}
-                consultant={consultant}
-                firm={firm}
-            >
-                {renderStepContent()}
-            </QuestionnaireLayout>
+            <div className='w-[60%] mx-auto'>
+                <QuestionnaireLayout
+                    currentStep={currentStep}
+                    isValid={isValid}
+                    isSubmitting={isSubmitting}
+                    onNext={handleNext}
+                    onPrevious={handlePrevious}
+                    onSave={handleSave}
+                    consultant={consultant}
+                    firm={firm}
+                >
+                    {renderStepContent()}
+                </QuestionnaireLayout>
+            </div>
         </div>
         </>
     );

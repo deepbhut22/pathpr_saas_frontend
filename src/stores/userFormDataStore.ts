@@ -1,8 +1,9 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import {
     IUserProfile, BasicInfo, LanguageInfo, EducationInfo,
     SpouseInfo, DependentInfo, ConnectionInfo, WorkInfo, JobOfferInfo,
-    Education, Dependent, WorkExperience
+    Education, Dependent, WorkExperience, IUserProfileModel
 } from '../types';
 
 const defaultBasicInfo: BasicInfo = {
@@ -50,8 +51,6 @@ const defaultDependentInfo: DependentInfo = {
 };
 
 const defaultConnectionInfo: ConnectionInfo = {
-    // hasConnections: false,
-    // connectionList: []
     doesUserHaveFamilyInCanadaWhoIsCitizenOrPermanentResident: null
 };
 
@@ -65,13 +64,8 @@ const defaultJobOfferInfo: JobOfferInfo = {
     jobOffer: {
         jobTitle: '',
         nocCode: '',
-        // isPaid: false,
-        // hoursPerWeek: null,
         province: '',
-        // isLMIA: false,
         startDate: '',
-        // hasEndDate: false,
-        // endDate: '',
         teer: 0
     }
 };
@@ -102,6 +96,7 @@ const initialUserProfile: IUserProfile = {
 
 interface UserFormDataState {
     userProfile: IUserProfile;
+    setUserProfile: (profile: IUserProfileModel) => void;
     updateBasicInfo: (info: Partial<BasicInfo>) => void;
     updateLanguageInfo: (info: Partial<LanguageInfo>) => void;
     updateEducationInfo: (info: Partial<EducationInfo>) => void;
@@ -112,8 +107,6 @@ interface UserFormDataState {
     addDependent: (dependent: Dependent) => void;
     removeDependent: (id: string) => void;
     updateConnectionInfo: (info: boolean) => void;
-    // addConnection: (connection: Connection) => void;
-    // removeConnection: (id: string) => void;
     updateWorkInfo: (info: Partial<WorkInfo>) => void;
     addWorkExperience: (workExperience: WorkExperience) => void;
     removeWorkExperience: (id: string) => void;
@@ -122,207 +115,228 @@ interface UserFormDataState {
     resetUserProfile: () => void;
 }
 
-export const useUserFormDataStore = create<UserFormDataState>()((set) => ({
-    userProfile: initialUserProfile,
+export const useUserFormDataStore = create<UserFormDataState>()(
+    persist(
+        (set) => ({
+            userProfile: initialUserProfile,
 
-    updateBasicInfo: (info) => set((state) => ({
-        userProfile: {
-            ...state.userProfile,
-            profileData: {
-                ...state.userProfile.profileData,
-                basicInfo: { ...state.userProfile.profileData.basicInfo, ...info }
-            }
+            setUserProfile: (profile) =>
+                set({
+                    userProfile: {
+                        ...initialUserProfile,
+                        profileData: profile
+                    }
+                }),
+
+            updateBasicInfo: (info) =>
+                set((state) => ({
+                    userProfile: {
+                        ...state.userProfile,
+                        profileData: {
+                            ...state.userProfile.profileData,
+                            basicInfo: { ...state.userProfile.profileData.basicInfo, ...info }
+                        }
+                    }
+                })),
+
+            updateLanguageInfo: (info) =>
+                set((state) => ({
+                    userProfile: {
+                        ...state.userProfile,
+                        profileData: {
+                            ...state.userProfile.profileData,
+                            languageInfo: { ...state.userProfile.profileData.languageInfo, ...info }
+                        }
+                    }
+                })),
+
+            updateEducationInfo: (info) =>
+                set((state) => ({
+                    userProfile: {
+                        ...state.userProfile,
+                        profileData: {
+                            ...state.userProfile.profileData,
+                            educationInfo: { ...state.userProfile.profileData.educationInfo, ...info }
+                        }
+                    }
+                })),
+
+            addEducation: (education) =>
+                set((state) => ({
+                    userProfile: {
+                        ...state.userProfile,
+                        profileData: {
+                            ...state.userProfile.profileData,
+                            educationInfo: {
+                                ...state.userProfile.profileData.educationInfo,
+                                educationList: [
+                                    ...state.userProfile.profileData.educationInfo.educationList,
+                                    education
+                                ]
+                            }
+                        }
+                    }
+                })),
+
+            removeEducation: (id) =>
+                set((state) => ({
+                    userProfile: {
+                        ...state.userProfile,
+                        profileData: {
+                            ...state.userProfile.profileData,
+                            educationInfo: {
+                                ...state.userProfile.profileData.educationInfo,
+                                educationList: state.userProfile.profileData.educationInfo.educationList.filter(
+                                    (edu) => edu.id !== id
+                                )
+                            }
+                        }
+                    }
+                })),
+
+            updateSpouseInfo: (info) =>
+                set((state) => ({
+                    userProfile: {
+                        ...state.userProfile,
+                        profileData: {
+                            ...state.userProfile.profileData,
+                            spouseInfo: { ...state.userProfile.profileData.spouseInfo, ...info }
+                        }
+                    }
+                })),
+
+            updateDependentInfo: (info) =>
+                set((state) => ({
+                    userProfile: {
+                        ...state.userProfile,
+                        profileData: {
+                            ...state.userProfile.profileData,
+                            dependentInfo: { ...state.userProfile.profileData.dependentInfo, ...info }
+                        }
+                    }
+                })),
+
+            addDependent: (dependent) =>
+                set((state) => ({
+                    userProfile: {
+                        ...state.userProfile,
+                        profileData: {
+                            ...state.userProfile.profileData,
+                            dependentInfo: {
+                                ...state.userProfile.profileData.dependentInfo,
+                                dependentList: [
+                                    ...state.userProfile.profileData.dependentInfo.dependentList,
+                                    dependent
+                                ]
+                            }
+                        }
+                    }
+                })),
+
+            removeDependent: (id) =>
+                set((state) => ({
+                    userProfile: {
+                        ...state.userProfile,
+                        profileData: {
+                            ...state.userProfile.profileData,
+                            dependentInfo: {
+                                ...state.userProfile.profileData.dependentInfo,
+                                dependentList: state.userProfile.profileData.dependentInfo.dependentList.filter(
+                                    (dep) => dep.id !== id
+                                )
+                            }
+                        }
+                    }
+                })),
+
+            updateConnectionInfo: (info: boolean) =>
+                set((state) => ({
+                    userProfile: {
+                        ...state.userProfile,
+                        profileData: {
+                            ...state.userProfile.profileData,
+                            connectionInfo: {
+                                doesUserHaveFamilyInCanadaWhoIsCitizenOrPermanentResident: info
+                            }
+                        }
+                    }
+                })),
+
+            updateWorkInfo: (info) =>
+                set((state) => ({
+                    userProfile: {
+                        ...state.userProfile,
+                        profileData: {
+                            ...state.userProfile.profileData,
+                            workInfo: { ...state.userProfile.profileData.workInfo, ...info }
+                        }
+                    }
+                })),
+
+            addWorkExperience: (workExperience) =>
+                set((state) => ({
+                    userProfile: {
+                        ...state.userProfile,
+                        profileData: {
+                            ...state.userProfile.profileData,
+                            workInfo: {
+                                ...state.userProfile.profileData.workInfo,
+                                workExperienceList: [
+                                    ...state.userProfile.profileData.workInfo.workExperienceList,
+                                    workExperience
+                                ]
+                            }
+                        }
+                    }
+                })),
+
+            removeWorkExperience: (id) =>
+                set((state) => ({
+                    userProfile: {
+                        ...state.userProfile,
+                        profileData: {
+                            ...state.userProfile.profileData,
+                            workInfo: {
+                                ...state.userProfile.profileData.workInfo,
+                                workExperienceList: state.userProfile.profileData.workInfo.workExperienceList.filter(
+                                    (work) => work.id !== id
+                                )
+                            }
+                        }
+                    }
+                })),
+
+            updateJobOfferInfo: (info) =>
+                set((state) => ({
+                    userProfile: {
+                        ...state.userProfile,
+                        profileData: {
+                            ...state.userProfile.profileData,
+                            jobOfferInfo: { ...state.userProfile.profileData.jobOfferInfo, ...info }
+                        }
+                    }
+                })),
+
+            setProfileComplete: (isComplete) =>
+                set((state) => ({
+                    userProfile: {
+                        ...state.userProfile,
+                        profileData: {
+                            ...state.userProfile.profileData,
+                            isComplete
+                        }
+                    }
+                })),
+
+            resetUserProfile: () => set({ userProfile: initialUserProfile })
+        }),
+        {
+            name: 'user-form-storage', // storage key
+            version: 1
         }
-    })),
+    )
+);
 
-    updateLanguageInfo: (info) => set((state) => ({
-        userProfile: {
-            ...state.userProfile,
-            profileData: {
-                ...state.userProfile.profileData,
-                languageInfo: { ...state.userProfile.profileData.languageInfo, ...info }
-            }
-        }
-    })),
-
-    updateEducationInfo: (info) => set((state) => ({
-        userProfile: {
-            ...state.userProfile,
-            profileData: {
-                ...state.userProfile.profileData,
-                educationInfo: { ...state.userProfile.profileData.educationInfo, ...info }
-            }
-        }
-    })),
-
-    addEducation: (education) => set((state) => ({
-        userProfile: {
-            ...state.userProfile,
-            profileData: {
-                ...state.userProfile.profileData,
-                educationInfo: {
-                    ...state.userProfile.profileData.educationInfo,
-                    educationList: [...state.userProfile.profileData.educationInfo.educationList, education]
-                }
-            }
-        }
-    })),
-
-    removeEducation: (id) => set((state) => ({
-        userProfile: {
-            ...state.userProfile,
-            profileData: {
-                ...state.userProfile.profileData,
-                educationInfo: {
-                    ...state.userProfile.profileData.educationInfo,
-                    educationList: state.userProfile.profileData.educationInfo.educationList.filter(
-                        (edu) => edu.id !== id
-                    )
-                }
-            }
-        }
-    })),
-
-    updateSpouseInfo: (info) => set((state) => ({
-        userProfile: {
-            ...state.userProfile,
-            profileData: {
-                ...state.userProfile.profileData,
-                spouseInfo: { ...state.userProfile.profileData.spouseInfo, ...info }
-            }
-        }
-    })),
-
-    updateDependentInfo: (info) => set((state) => ({
-        userProfile: {
-            ...state.userProfile,
-            profileData: {
-                ...state.userProfile.profileData,
-                dependentInfo: { ...state.userProfile.profileData.dependentInfo, ...info }
-            }
-        }
-    })),
-
-    addDependent: (dependent) => set((state) => ({
-        userProfile: {
-            ...state.userProfile,
-            dependentInfo: {
-                ...state.userProfile.profileData.dependentInfo,
-                dependentList: [...state.userProfile.profileData.dependentInfo.dependentList, dependent]
-            }
-        }
-    })),
-
-    removeDependent: (id) => set((state) => ({
-        userProfile: {
-            ...state.userProfile,
-            profileData: {
-                ...state.userProfile.profileData,
-                dependentInfo: {
-                    ...state.userProfile.profileData.dependentInfo,
-                    dependentList: state.userProfile.profileData.dependentInfo.dependentList.filter(
-                        (dep) => dep.id !== id
-                    )
-                }
-            }
-        }
-    })),
-
-    updateConnectionInfo: (info: boolean) => set((state) => ({
-        userProfile: {
-            ...state.userProfile,
-            profileData: {
-                ...state.userProfile.profileData,
-                connectionInfo: { doesUserHaveFamilyInCanadaWhoIsCitizenOrPermanentResident: info }
-            }
-        }
-    })),
-
-    // addConnection: (connection) => set((state) => ({
-    //   userProfile: {
-    //     ...state.userProfile,
-    //     connectionInfo: {
-    //       ...state.userProfile.connectionInfo,
-    //       connectionList: [...state.userProfile.connectionInfo.connectionList, connection]
-    //     }
-    //   }
-    // })),
-
-    // removeConnection: (id) => set((state) => ({
-    //   userProfile: {
-    //     ...state.userProfile,
-    //     connectionInfo: {
-    //       ...state.userProfile.connectionInfo,
-    //       connectionList: state.userProfile.connectionInfo.connectionList.filter(
-    //         (conn) => conn.id !== id
-    //       )
-    //     }
-    //   }
-    // })),
-
-    updateWorkInfo: (info) => set((state) => ({
-        userProfile: {
-            ...state.userProfile,
-            profileData: {
-                ...state.userProfile.profileData,
-                workInfo: { ...state.userProfile.profileData.workInfo, ...info }
-            }
-        }
-    })),
-
-    addWorkExperience: (workExperience) => set((state) => ({
-        userProfile: {
-            ...state.userProfile,
-            profileData: {
-                ...state.userProfile.profileData,
-                workInfo: {
-                    ...state.userProfile.profileData.workInfo,
-                    workExperienceList: [...state.userProfile.profileData.workInfo.workExperienceList, workExperience]
-                }
-            }
-        }
-    })),
-
-    removeWorkExperience: (id) => set((state) => ({
-        userProfile: {
-            ...state.userProfile,
-            profileData: {
-                ...state.userProfile.profileData,
-                workInfo: {
-                    ...state.userProfile.profileData.workInfo,
-                    workExperienceList: state.userProfile.profileData.workInfo.workExperienceList.filter(
-                        (work) => work.id !== id
-                    )
-                }
-            }
-        }
-    })),
-
-    updateJobOfferInfo: (info) => set((state) => ({
-        userProfile: {
-            ...state.userProfile,
-            profileData: {
-                ...state.userProfile.profileData,
-                jobOfferInfo: { ...state.userProfile.profileData.jobOfferInfo, ...info }
-            }
-        }
-    })),
-
-    setProfileComplete: (isComplete) => set((state) => ({
-        userProfile: {
-            ...state.userProfile,
-            profileData: {
-                ...state.userProfile.profileData,
-                isComplete
-            }
-        }
-    })),
-
-    resetUserProfile: () => set({ userProfile: initialUserProfile })
-}));
-
-
-// Helper function to check if the user profile is complete
 export const isProfileComplete = (profile: IUserProfile): { isComplete: boolean, status: { [key: string]: boolean } } => {
     const {
         profileData: {

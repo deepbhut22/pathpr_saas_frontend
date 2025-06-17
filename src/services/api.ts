@@ -211,6 +211,18 @@ export const consultantsAPI = {
   deleteConsultant: async (consultantId: string): Promise<void> => {
     await api.delete(`/consultants/${consultantId}`);
   },
+
+  updateClientProfile: async (clientId: string, data: Partial<IUserProfileModel>, step: string): Promise<IUserProfile> => {    
+    const response = await api.put(`/consultants/update-client/${step}/${clientId}`, { data });
+    return response.data.data;
+  },
+
+  reGenerateReport: async (clientId: string): Promise<IReport> => {
+    const response = await api.get(`/consultants/regenerate-report/${clientId}`);
+    console.log(response);
+    
+    return response.data.data;
+  }
 };
 
 export const dashboardAPI = {

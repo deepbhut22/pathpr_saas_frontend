@@ -231,3 +231,17 @@ export const dashboardAPI = {
     return response.data;
   },
 };
+
+
+export const chatAPI = {
+  getChatHistory: async (clientId: string): Promise<any> => {
+    const response = await api.get(`/consultants/chat/${clientId}`);
+    return response.data;
+  },
+
+  sendMessage: async (data: {query: string, type: string, clientId: string}): Promise<any> => {
+    const response = await api.post(`/consultants/chat/personal`, data);
+    return response.data.data;
+  }
+};
+

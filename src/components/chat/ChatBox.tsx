@@ -2,11 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { X, Send, Bot } from 'lucide-react';
 import { chatAPI } from '@/services/api';
 import ReactMarkdown from 'react-markdown';
-
+import { Textarea } from '@/components/ui/textarea';
 interface ChatBoxProps {
   isOpen: boolean;
   onClose: () => void;
@@ -44,6 +43,11 @@ const ChatBox = ({ isOpen, onClose, clientId }: ChatBoxProps) => {
       content: newMessage.query,
       role: 'consultant',
       createdAt: new Date(),
+    }, {
+      _id: Math.random().toString(),
+      content: 'Loading...',
+      role: 'assistant',
+      createdAt: new Date(),
     }]);
 
     const response = await chatAPI.sendMessage(newMessage);
@@ -67,10 +71,17 @@ const ChatBox = ({ isOpen, onClose, clientId }: ChatBoxProps) => {
     scrollToBottom(); 
   }, []);
 
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   const scrollToBottom = () => {
     const chatContainer = document.querySelector('.chat-container');
     if (chatContainer) {
-      chatContainer.scrollTop = chatContainer.scrollHeight;
+      chatContainer.scrollTo({
+        top: chatContainer.scrollHeight,
+        behavior: 'smooth'
+      });
     }
   };
 
@@ -111,7 +122,7 @@ const ChatBox = ({ isOpen, onClose, clientId }: ChatBoxProps) => {
           </div>
           
           <form onSubmit={handleSendMessage} className="flex gap-2">
-            <Input
+            <Textarea
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               placeholder="Type your message..."

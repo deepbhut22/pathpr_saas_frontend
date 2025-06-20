@@ -337,12 +337,12 @@ const ClientUpdateForm = ({ client, onBack, onSuccess }: ClientUpdateFormProps) 
             <MessageSquare className="h-4 w-4 mr-2" />
             Re-Generate Report
           </Button>
-          <Button 
+          {/* <Button 
             // onClick={onOpenChat}
           >
             <MessageSquare className="h-4 w-4 mr-2" />
             Chat with MapleAI
-          </Button>
+          </Button> */}
         </div>
       </div>
     <div className='w-full'>

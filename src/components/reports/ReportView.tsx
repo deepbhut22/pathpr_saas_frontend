@@ -3,8 +3,11 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Button } from '@/components/ui/button';
 import { useReportsStore } from '@/stores/reportsStore';
 import { AlertTriangle, ArrowLeft, CheckCircle, ExternalLink, MessageSquare, Clipboard } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { alternativePrograms } from '@/utils/dummyData';
+import { PNPOptionsDialog } from '../PopUp/PNPOptionsDialog';
+import { AlternativePathwaysDialog } from '../PopUp/AlternativePathwaysDialog';
+import { SuggestionsDialog } from '../PopUp/SuggestionsDialog';
 
 interface ReportViewProps {
   clientId: string;
@@ -13,8 +16,12 @@ interface ReportViewProps {
 }
 
 const ReportView = ({ clientId, onBack, onOpenChat }: ReportViewProps) => {
+  const { firmSlug } = useParams();
   const { selectedReport } = useReportsStore();
   const [showChatBox, setShowChatBox] = useState(false);
+  const [showPNPOptionsDialog, setShowPNPOptionsDialog] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [showAlternativePathwaysDialog, setShowAlternativePathwaysDialog] = useState(false);
 
   if (!selectedReport) {
     return (
@@ -29,6 +36,17 @@ const ReportView = ({ clientId, onBack, onOpenChat }: ReportViewProps) => {
 
   const eligiblePrograms = content?.pnp?.pnpAssessment?.filter((program) => program.status === 'Eligible');
   const noEligiblePrograms = content?.pnp?.pnpAssessment?.filter((program) => program.status !== 'Eligible');
+
+  const transformPNPOptions = (assessments: any[]): any[] => {
+    return assessments.map((assessment, index) => ({
+      id: assessment.id || `pnp-${index}`,
+      province: assessment.province,
+      stream_name: assessment.stream_name,
+      status: assessment.status,
+      reason: assessment.reason,
+      // selected: selectedPNPOption === (assessment.id || `pnp-${index}`)
+    }));
+  };
 
   return (
     <div className="space-y-6">
@@ -301,7 +319,7 @@ const ReportView = ({ clientId, onBack, onOpenChat }: ReportViewProps) => {
                   </CardContent>
                   <CardFooter className="flex flex-col gap-2">
                     <Button
-                      // onClick={() => setShowPNPOptionsDialog(true)}
+                      onClick={() => setShowPNPOptionsDialog(true)}
                       variant="outline"
                       size="sm"
                       className="w-full"
@@ -309,7 +327,7 @@ const ReportView = ({ clientId, onBack, onOpenChat }: ReportViewProps) => {
                       View All PNP Options
                     </Button>
                     <Button
-                      // onClick={() => setShowSuggestions(true)}
+                      onClick={() => setShowSuggestions(true)}
                       variant="outline"
                       size="sm"
                       className="w-full"
@@ -353,7 +371,7 @@ const ReportView = ({ clientId, onBack, onOpenChat }: ReportViewProps) => {
                   </CardContent>
                   <CardFooter>
                     <Button
-                      // onClick={() => setShowAlternativePathwaysDialog(true)}
+                      onClick={() => setShowAlternativePathwaysDialog(true)}
                       variant="outline"
                       size="sm"
                       className="w-full"
@@ -462,7 +480,7 @@ const ReportView = ({ clientId, onBack, onOpenChat }: ReportViewProps) => {
             <p className="text-sm text-secondary-600 italic">
               Disclaimer: These results are not immigration advice. If you want to learn more about the program, review the resources below.
             </p>
-            <Link className="text-sm text-secondary-600 flex gap-1 hover:underline" to={"/resources"}><ExternalLink className="w-4 h-4" />View Resources</Link>
+            <Link className="text-sm text-secondary-600 flex gap-1 hover:underline" to={`/${firmSlug}/pnp-resources`}><ExternalLink className="w-4 h-4" />View Resources</Link>
           </div>
         </div>
       </div>
@@ -635,6 +653,24 @@ const ReportView = ({ clientId, onBack, onOpenChat }: ReportViewProps) => {
           </CardContent>
         </Card>
       )} */}
+      <PNPOptionsDialog
+        isOpen={showPNPOptionsDialog}
+        onClose={() => setShowPNPOptionsDialog(false)}
+        options={transformPNPOptions(content?.pnp?.pnpAssessment || [])}
+        // onOptionSelect={handlePNPOptionSelect}
+      />
+      <SuggestionsDialog
+        isOpen={showSuggestions}
+        onClose={() => setShowSuggestions(false)}
+        options={content?.pnp?.suggestions || []}
+        onOptionSelect={() => { }}
+      />
+      <AlternativePathwaysDialog
+        isOpen={showAlternativePathwaysDialog}
+        onClose={() => setShowAlternativePathwaysDialog(false)}
+        options={alternativePrograms}
+        onOptionSelect={() => { }}
+      />
     </div>
   );
 };

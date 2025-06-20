@@ -174,6 +174,7 @@ const FirmPage = () => {
           isOpen={isChatOpen}
           onClose={() => setIsChatOpen(false)}
           clientId={selectedClient?._id}
+          type="personal"
         />
       )}
     </div>

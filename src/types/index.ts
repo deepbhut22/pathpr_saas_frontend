@@ -213,7 +213,7 @@ export interface IReportContent {
     }[];
     suggestions: {
       action: string;
-      reason: string[];
+      reason: string;
     }[];
   };
   alternativePathways: any[];

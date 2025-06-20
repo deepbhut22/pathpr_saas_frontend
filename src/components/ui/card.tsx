@@ -76,4 +76,22 @@ const CardFooter = React.forwardRef<
 ))
 CardFooter.displayName = "CardFooter"
 
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
+interface CardImageProps {
+  src: string;
+  alt: string;
+  className?: string;
+}
+
+function CardImage({ src, alt, className }: CardImageProps) {
+  return (
+    <div className={cn('w-full h-48 overflow-hidden', className)}>
+      <img
+        src={src}
+        alt={alt}
+        className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+      />
+    </div>
+  );
+}
+
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent, CardImage }

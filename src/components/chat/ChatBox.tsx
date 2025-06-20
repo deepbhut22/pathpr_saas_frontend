@@ -10,6 +10,7 @@ interface ChatBoxProps {
   isOpen: boolean;
   onClose: () => void;
   clientId?: string;
+  type?: string;
 }
 
 interface Message {
@@ -19,12 +20,11 @@ interface Message {
   createdAt: Date;
 }
 
-const ChatBox = ({ isOpen, onClose, clientId }: ChatBoxProps) => {
+const ChatBox = ({ isOpen, onClose, clientId, type='general' }: ChatBoxProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  if (!isOpen) return null;
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,7 +50,12 @@ const ChatBox = ({ isOpen, onClose, clientId }: ChatBoxProps) => {
       createdAt: new Date(),
     }]);
 
-    const response = await chatAPI.sendMessage(newMessage);
+    let response: any;
+    if (type === 'personal') {
+      response = await chatAPI.sendMessage(newMessage);
+    } else {
+      response = await chatAPI.sendGeneralMessage({query: newMessage.query});
+    }
     console.log(response);
     setMessages(response.messages);
     setIsLoading(false);
@@ -58,22 +63,17 @@ const ChatBox = ({ isOpen, onClose, clientId }: ChatBoxProps) => {
 
   const fetchChatHistory = async () => {
     try {
-      const response = await chatAPI.getChatHistory(clientId);
+      let response: any;
+      if (type === 'personal') {
+        response = await chatAPI.getChatHistory(clientId);
+      } else {
+        response = await chatAPI.getGeneralChatHistory();
+      }
       setMessages(response.data);
-      console.log(messages);
     } catch (error) {
       console.error('Error fetching chat history:', error);
     }
   };
-
-  useEffect(() => {
-    fetchChatHistory();
-    scrollToBottom(); 
-  }, []);
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
 
   const scrollToBottom = () => {
     const chatContainer = document.querySelector('.chat-container');
@@ -84,6 +84,16 @@ const ChatBox = ({ isOpen, onClose, clientId }: ChatBoxProps) => {
       });
     }
   };
+  useEffect(() => {
+    if (!isOpen) return;
+    fetchChatHistory();
+  }, [isOpen, type, clientId]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed right-4 top-4 bottom-4 w-1/3 z-50">
@@ -93,9 +103,12 @@ const ChatBox = ({ isOpen, onClose, clientId }: ChatBoxProps) => {
             <Bot className="h-5 w-5 mr-2" />
             MapleAI Chat
           </CardTitle>
-          <Button variant="ghost" size="sm" onClick={onClose}>
-            <X className="h-4 w-4" />
+          <div className='flex items-center gap-2'>
+            {type === 'general' ? 'General Chat' : `Personal Chat`}
+            <Button variant="ghost" size="sm" onClick={onClose}>
+              <X className="h-4 w-4" />
           </Button>
+          </div>
         </CardHeader>
         
         <CardContent className="flex-1 flex flex-col p-4 overflow-y-auto scrollbar-thin scrollbar-hide chat-container">

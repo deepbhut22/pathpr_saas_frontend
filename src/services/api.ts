@@ -239,8 +239,18 @@ export const chatAPI = {
     return response.data;
   },
 
+  getGeneralChatHistory: async (): Promise<any> => {
+    const response = await api.get(`/consultants/chat`);
+    return response.data;
+  },
+
   sendMessage: async (data: {query: string, type: string, clientId: string}): Promise<any> => {
     const response = await api.post(`/consultants/chat/personal`, data);
+    return response.data.data;
+  },
+
+  sendGeneralMessage: async (data: {query: string}): Promise<any> => {
+    const response = await api.post(`/consultants/chat/general`, data);
     return response.data.data;
   }
 };

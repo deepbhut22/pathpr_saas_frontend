@@ -19,6 +19,7 @@ import FirmInfo from "./pages/FirmInfo";
 import FirmSettings from "./pages/FirmSettings";
 import ClientSuccessPage from "./pages/ClientSuccessPage";
 import ClientUpdateForm from "./components/clients/ClientUpdateForm";
+import PNPResourcesPage from "./pages/PNPResourcePaage";
   // import './App.css';
 const queryClient = new QueryClient();
 
@@ -108,6 +109,12 @@ const App = () => {
                   </ProtectedRoute>
                 }
               />
+
+            <Route path="/:slug/pnp-resources" element={
+              <ProtectedRoute>
+                <PNPResourcesPage />
+              </ProtectedRoute>
+            } />
               
             <Route path="/:slug/data-form/:step?/:token" element={<Questionnaire />} />
 

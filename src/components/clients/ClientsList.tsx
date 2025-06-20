@@ -21,11 +21,13 @@ import {
 } from '@/components/ui/pagination';
 import { useClientsStore } from '@/stores/clientsStore';
 import { IUserProfile } from '@/types';
-import { Search, Filter, X, RefreshCw, Plus, Copy, ExternalLink } from 'lucide-react';
+import { Search, Filter, X, RefreshCw, Plus, Copy, ExternalLink, Bot } from 'lucide-react';
 import GenericPopUp from '../PopUp/GenericPopUp';
 import { clientsAPI } from '@/services/api';
 import { useAuthStore } from '@/stores/authStore';
 import { useToast } from '@/hooks/use-toast';
+import { useConsultantsStore } from '@/stores/consultantsStore';
+import ChatBox from '../chat/ChatBox';
 interface ClientsListProps {
   clients: IUserProfile[];
   loading: boolean;
@@ -49,6 +51,7 @@ const ClientsList = ({
   const [localSearch, setLocalSearch] = useState(filters.search || '');
   const [isClientLinkPopupOpen, setIsClientLinkPopupOpen] = useState(false);
   const [link, setLink] = useState('');
+  const [isChatWithMapleAiOpen, setIsChatWithMapleAiOpen] = useState(false);
   const { toast } = useToast();
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,6 +92,10 @@ const ClientsList = ({
     }
   };
 
+  const handleChatWithMapleAi = () => {
+    setIsChatWithMapleAiOpen(true);
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -97,6 +104,10 @@ const ClientsList = ({
           <p className="text-gray-600">Manage your immigration clients</p>
         </div>
         <div className="flex gap-2">
+          <Button onClick={handleChatWithMapleAi} variant="outline" size="sm">
+            <Bot className="h-4 w-4 mr-2" />
+            Chat With MapleAi
+          </Button>
           <Button onClick={handleCreateClient} variant="outline" size="sm">
             <Plus className="h-4 w-4 mr-2" />
             Add Client
@@ -273,6 +284,11 @@ const ClientsList = ({
             </Button>
           </div>
         </div>}
+      />
+      <ChatBox
+        isOpen={isChatWithMapleAiOpen}
+        onClose={() => setIsChatWithMapleAiOpen(false)}
+        type="general"
       />
     </div>
   );

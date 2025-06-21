@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { ProvinceLinksDialog } from "../components/PopUp/ProvinceLinksDialogs";
 import { HoverEffect } from "../components/ui/card-hover-effect";
+import Sidebar from "../components/layout/Sidebar";
+import { useParams } from "react-router-dom";
 
 interface ProvinceLinksOption {
     title: String;
@@ -8,6 +10,12 @@ interface ProvinceLinksOption {
 }
 
 export default function PNPResourcesPage() {
+
+    const { slug: firmSlug } = useParams();
+    
+    if (!firmSlug) { 
+        return <div>Firm slug not found</div>;
+    }
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -17,8 +25,16 @@ export default function PNPResourcesPage() {
     const [provinceLinks, setProvinceLinks] = useState<ProvinceLinksOption[]>([]);
 
     return (
-        <>
-                <div className="w-[80%] mx-auto mt-24 text-center">
+        <div className="flex h-screen overflow-hidden bg-gray-100">
+            <Sidebar firmSlug={firmSlug} />
+            <div className="flex flex-1 flex-col overflow-auto ml-64">    
+                <div className="flex items-center justify-between px-40 py-5">
+                    <div>
+                        <h1 className="text-3xl font-bold text-gray-900 mb-2">PNP Resources</h1>
+                        <p className="text-gray-600">Here you can find all the resources you need to know.</p>
+                    </div>
+                </div>
+                <div className="w-[80%] mx-auto text-center">
                     <HoverEffect items={provinces} setProvinceLinks={setProvinceLinks} setShowLinksDialog={setShowLinksDialog} />
                 </div>
                 <ProvinceLinksDialog
@@ -27,7 +43,8 @@ export default function PNPResourcesPage() {
                     options={provinceLinks || []}
                     onOptionSelect={() => { }}
                 />
-        </>
+            </div>
+        </div>
     );
 }
 

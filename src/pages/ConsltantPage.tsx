@@ -1,7 +1,6 @@
-import { Button } from "@/components/ui/button";
 import Sidebar from "@/components/layout/Sidebar";
 import { Plus, RefreshCw } from 'lucide-react';
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ConsultantList from "@/components/consultants/ConsultantList";
 import { useClientsStore } from "@/stores/clientsStore";
@@ -17,21 +16,10 @@ type ViewMode = string;
 export default function ConstultantPage() {
 
     const { firmSlug } = useParams<{ firmSlug: string }>();
-
+    const navigate = useNavigate();
     const [refresh, setRefresh] = useState(false);
     const [viewMode, setViewMode] = useState<ViewMode>('list');
 
-
-    // const {
-    //     clients,
-    //     selectedClient,
-    //     // loading,
-    //     // pagination,
-    //     // filters,
-    //     // setClients,
-    //     // setSelectedClient,
-    //     // setLoading
-    // } = useClientsStore();
 
     const { 
         loading,
@@ -44,6 +32,15 @@ export default function ConstultantPage() {
         setFilters,
         pagination,
     } = useConsultantsStore();
+
+    const {
+        // selectedClient,
+        setSelectedClient,
+    } = useClientsStore();
+
+    const {
+        setClientsPageViewMode,
+    } = useClientsStore();
     
     const [consultantClients, setConsultantClients] = useState<IUserProfile[]>([]);
 
@@ -105,6 +102,21 @@ export default function ConstultantPage() {
         setViewMode('create');
     }
 
+    const handleClientSelect = async (clientId: string) => {
+        try {            
+            const response = await clientsAPI.getClientById(clientId);
+            setSelectedClient(response as IUserProfile);
+            setClientsPageViewMode('profile');
+            navigate(`/${firmSlug}`);
+        } catch (error: any) {
+            toast({
+                title: "Error loading client",
+                description: error.response?.data?.message || "Failed to load client details",
+                variant: "destructive",
+            });
+        }
+    }
+
     useEffect(() => {
         if (firmSlug) {
             loadConsultants();
@@ -162,6 +174,7 @@ export default function ConstultantPage() {
                                     consultant={selectedConsultant}
                                     clients={consultantClients}
                                     onBack={() => setViewMode('list')}
+                                    onClientSelect={handleClientSelect}
                                 />
                             )}
                         </div>

@@ -110,7 +110,7 @@ const App = () => {
                 }
               />
 
-            <Route path="/:slug/pnp-resources" element={
+            <Route path="/:firmSlug/pnp-resources" element={
               <ProtectedRoute>
                 <PNPResourcesPage />
               </ProtectedRoute>

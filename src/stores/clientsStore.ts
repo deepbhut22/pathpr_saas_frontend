@@ -5,6 +5,8 @@ import { IUserProfile, PaginatedResponse, ClientFilters } from '@/types';
 interface ClientsState {
   clients: IUserProfile[];
   selectedClient: IUserProfile | null;
+  clientsPageViewMode: string;
+  setClientsPageViewMode: (viewMode: string) => void;
   loading: boolean;
   error: string | null;
   pagination: {
@@ -35,7 +37,8 @@ export const useClientsStore = create<ClientsState>((set, get) => ({
     total: 0,
   },
   filters: {},
-  
+  clientsPageViewMode: 'list',
+  setClientsPageViewMode: (viewMode: string) => set({ clientsPageViewMode: viewMode }),
   setClients: (response) => {
     set({
       clients: response.data,

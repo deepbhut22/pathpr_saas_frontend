@@ -11,7 +11,7 @@ interface ProvinceLinksOption {
 
 export default function PNPResourcesPage() {
 
-    const { slug: firmSlug } = useParams();
+    const { firmSlug } = useParams<{ firmSlug: string }>();
     
     if (!firmSlug) { 
         return <div>Firm slug not found</div>;

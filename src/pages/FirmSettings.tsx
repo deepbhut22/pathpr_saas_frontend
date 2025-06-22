@@ -23,6 +23,8 @@ export default function FirmSettings() {
     const { toast } = useToast();
     
     const { firmSlug } = useParams();
+    console.log(useParams());
+    
 
     const fetchFirm = async () => {
         const response = await firmAPI.getFirmBySlug(firmSlug as string);

@@ -49,9 +49,8 @@ api.interceptors.response.use(
 );
 
 export const authAPI = {
-  login: async (email: string, password: string): Promise<LoginResponse> => {
+    login: async (email: string, password: string): Promise<any> => {
     const response = await api.post('/consultants/login', { email, password });
-    console.log(response);
     return response.data;
   },
   

@@ -31,7 +31,7 @@ const FirmPage = () => {
     setLoading 
   } = useClientsStore();
 
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
+  const { clientsPageViewMode, setClientsPageViewMode } = useClientsStore();
   const [isChatOpen, setIsChatOpen] = useState(false);
 
   useEffect(() => {
@@ -83,7 +83,7 @@ const FirmPage = () => {
     try {
       const client = await clientsAPI.getClientById(clientId);
       setSelectedClient(client);
-      setViewMode('profile');
+      setClientsPageViewMode('profile');
     } catch (error: any) {
       toast({
         title: "Error loading client",
@@ -94,20 +94,20 @@ const FirmPage = () => {
   };
 
   const handleBackToList = () => {
-    setViewMode('list');
+    setClientsPageViewMode('list');
     setSelectedClient(null);
   };
 
   const handleEditClient = () => {
-    setViewMode('edit');
+    setClientsPageViewMode('edit');
   };
 
   const handleViewReport = () => {
-    setViewMode('report');
+    setClientsPageViewMode('report');
   };
 
   const handleBackToProfile = () => {
-    setViewMode('profile');
+    setClientsPageViewMode('profile');
   };
 
   if (!firmSlug) {
@@ -122,7 +122,7 @@ const FirmPage = () => {
         <main className="flex-1 relative overflow-y-auto focus:outline-none">
           <div className="py-6">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-              {viewMode === 'list' && (
+              {clientsPageViewMode === 'list' && (
                 <ClientsList
                   clients={clients}
                   loading={loading}
@@ -132,7 +132,7 @@ const FirmPage = () => {
                 />
               )}
               
-              {viewMode === 'profile' && selectedClient && (
+              {clientsPageViewMode === 'profile' && selectedClient && (
                 <ClientProfile
                   client={selectedClient}
                   onBack={handleBackToList}
@@ -142,18 +142,18 @@ const FirmPage = () => {
                 />
               )}
               
-              {viewMode === 'edit' && selectedClient && (
+              {clientsPageViewMode === 'edit' && selectedClient && (
                 <ClientUpdateForm
                   client={selectedClient}
                   onBack={handleBackToProfile}
                   onSuccess={() => {
-                    setViewMode('profile');
+                    setClientsPageViewMode('profile');
                     loadClients();
                   }}
                 />
               )}
               
-              {viewMode === 'report' && selectedClient && (
+              {clientsPageViewMode === 'report' && selectedClient && (
                 <ReportView
                   clientId={selectedClient._id}
                   onBack={handleBackToProfile}
@@ -161,7 +161,7 @@ const FirmPage = () => {
                 />
               )}
 
-              {viewMode === 'consultant-profile' && (
+              {clientsPageViewMode === 'consultant-profile' && (
                 <ConsultantSettings />
               )}
             </div>

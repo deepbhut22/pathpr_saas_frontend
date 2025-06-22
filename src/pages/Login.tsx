@@ -24,14 +24,17 @@ const Login: React.FC = () => {
     setIsLoading(true);
     try {
       const response = await authAPI.login(email, password);
+      console.log(response);
       login(response.consultant, response.consultant.firmId as unknown as IConsultantFirm, response.token);
+      console.log("here");
+      
 
       toast({
         title: "Login successful",
         description: "Welcome back!",
       });
 
-      navigate(`/${response.firmSlug}`);
+      // navigate(`/${response.firmSlug}`); 
     } catch (error: any) {
       toast({
         title: "Login failed",

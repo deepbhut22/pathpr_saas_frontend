@@ -432,6 +432,10 @@ export default function ConsultantSettings() {
         }
     };
 
+    // useEffect(() => {
+
+    // }, [isLoading])
+
     if (isLoading) {
         return (
             <div className="h-screen flex overflow-hidden bg-gray-100">
@@ -476,7 +480,7 @@ export default function ConsultantSettings() {
                                 {/* Password Update Card - Only show if password hasn't been changed */}
                                 {!consultant?.isPasswordChanged && (
                                     <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
-                                        <div className="bg-gradient-to-r from-blue-800 to-blue-900 px-6 py-4">
+                                        <div className="bg-slate-800 px-6 py-4">
                                             <div className="flex items-center">
                                                 <Lock className="h-6 w-6 text-white mr-3" />
                                                 <div>
@@ -499,7 +503,7 @@ export default function ConsultantSettings() {
                                                 </div>
                                                 <button
                                                     onClick={handlePasswordUpdate}
-                                                    className="px-6 py-3 bg-gradient-to-r from-blue-800 to-blue-900 text-white font-medium rounded-lg hover:from-blue-900 hover:to-blue-800 transition-all duration-200 flex items-center"
+                                                    className="px-6 bg-slate-800 text-white h-12 font-medium rounded-lg transition-all duration-200 flex items-center"
                                                 >
                                                     <Lock className="h-4 w-4 mr-2" />
                                                     Update

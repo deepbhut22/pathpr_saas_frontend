@@ -271,7 +271,7 @@ const Dashboard: React.FC = () => {
                                             cx="50%"
                                             cy="50%"
                                             labelLine={false}
-                                            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                                            // label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                                             outerRadius={80}
                                             fill="#000000"
                                             dataKey="value"
@@ -282,10 +282,10 @@ const Dashboard: React.FC = () => {
                                         </Pie>
                                         <Tooltip
                                             contentStyle={{
-                                                backgroundColor: '#1e293b',
-                                                border: '1px solid #475569',
+                                                backgroundColor: '#ffffff',
+                                                border: '1px solid #000000',
                                                 borderRadius: '6px',
-                                                color: '#ffffff'
+                                                color: '#000000'
                                             }}
                                         />
                                         <Legend

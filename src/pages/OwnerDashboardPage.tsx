@@ -82,6 +82,7 @@ const Dashboard: React.FC = () => {
         const response = await dashboardAPI.getOwnerDashboardData(firm?._id);
         console.log(response);
         setDashboardData(response);
+        setClbData(response.clbScoreDistribution[0].distribution)
         setIsLoading(false);
     }
 

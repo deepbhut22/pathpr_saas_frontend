@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, BarChart, Bar } from 'recharts';
 import { Users, FileText, UserCheck, TrendingUp, Target, Clock } from 'lucide-react';
 import Sidebar from '@/components/layout/Sidebar';
 import { useParams } from 'react-router-dom';
 import { dashboardAPI } from '@/services/api';
 import { useAuthStore } from '@/stores/authStore';
+import { previousDay } from 'date-fns';
+import { Value } from '@radix-ui/react-select';
 
 interface DashboardData {
     totals: {
@@ -38,12 +40,40 @@ interface DashboardData {
     }>;
     coveragePct: number;
     recentReports: number;
+    clbScoreDistribution: Array<{
+        _id: string;
+        distribution: Array<{
+            clb: string;
+            value: number;
+        }>;
+    }>;
+    crsDistribution: Array<{
+        range: string;
+        value: number;
+    }>;
 }
 
 const Dashboard: React.FC = () => {
     const [growthPeriod, setGrowthPeriod] = useState<'monthly' | 'weekly'>('monthly');
     const [dashboardData, setDashboardData] = useState<DashboardData>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [selectedLanguage, setSelectedLanguage] = useState<'english' | 'french'>('english');
+    const [clbData, setClbData] = useState<Array<{
+        clb: string;
+        value: number;
+    }>>([]);
+
+
+    const handleLanguageChange = (e: any) => {
+        setSelectedLanguage(e.target.value);
+        if (dashboardData.clbScoreDistribution[0]._id === e.target.value) {
+            setClbData(dashboardData.clbScoreDistribution[0].distribution)
+        } else {
+            setClbData(dashboardData.clbScoreDistribution[0].distribution)
+        }
+    }
+
+
     const { firmSlug } = useParams();
 
     const { firm } = useAuthStore();
@@ -208,6 +238,7 @@ const Dashboard: React.FC = () => {
                             title="Recent Reports"
                             value={dashboardData?.recentReports}
                             icon={<Clock size={24} />}
+                            subtitle='Reports Generated in the last 30 days'
                         />
                     </div>
 
@@ -297,6 +328,125 @@ const Dashboard: React.FC = () => {
                         </div>
                     </div>
 
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+
+                        {/* CLB Score Distribution Bar Chart with language selector */}
+                        <div className="bg-white p-6 rounded-lg border border-gray-200">
+                            <div className="flex items-center justify-between mb-6">
+                                <h2 className="text-xl font-semibold text-white">CLB Score Distribution</h2>
+                                <select
+                                    value={selectedLanguage}
+                                    onChange={handleLanguageChange}
+                                    className="bg-slate-700 text-white border border-slate-500 rounded px-2 py-1 text-sm"
+                                >
+                                    <option value="english">English</option>
+                                    <option value="french">French</option>
+                                </select>
+                            </div>
+                            <div className="h-64">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <BarChart data={clbData}>
+                                        <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
+                                        <XAxis
+                                            dataKey="clb"
+                                            stroke="#000000"
+                                            fontSize={12}
+                                            label={{ value: 'CLB Score', position: 'insideBottom', offset: 0, fill: '#000000' }}
+                                        />
+                                        <YAxis
+                                            stroke="#000000"
+                                            fontSize={12}
+                                        />
+                                        <Tooltip
+                                            contentStyle={{
+                                                backgroundColor: '#ffffff',
+                                                border: '1px solid #000000',
+                                                borderRadius: '6px',
+                                                color: '#000000'
+                                            }}
+                                        />
+                                        <Bar
+                                            dataKey="value"
+                                            fill="#475569"
+                                            radius={[4, 4, 0, 0]}
+                                        />
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </div>
+
+                        {/* CRS Score Distribution Line Chart */}
+                        <div className="bg-white p-6 rounded-lg border border-gray-200">
+                            <h2 className="text-xl font-semibold text-white mb-6">CRS Score Distribution</h2>
+                            <div className="h-64">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <LineChart data={dashboardData?.crsDistribution}>
+                                        <CartesianGrid strokeDasharray="3 3" stroke="#00000" />
+                                        <XAxis
+                                            dataKey="range"
+                                            stroke="#000000"
+                                            fontSize={12}
+                                        />
+                                        <YAxis
+                                            stroke="#000000"
+                                            fontSize={12}
+                                        />
+                                        <Tooltip
+                                            contentStyle={{
+                                                backgroundColor: '#ffffff',
+                                                border: '1px solid #000000',
+                                                borderRadius: '6px',
+                                                color: '#000000'
+                                            }}
+                                        />
+                                        <Line
+                                            type="monotone"
+                                            dataKey="value"
+                                            stroke="#000000"
+                                            strokeWidth={3}
+                                            dot={{ fill: '#000000', strokeWidth: 2, r: 4 }}
+                                            activeDot={{ r: 6, fill: '#000000' }}
+                                        />
+                                    </LineChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </div>
+
+                        {/* Province Pie Chart */}
+                        <div className="col-span-1 lg:col-span-2 bg-white p-6 rounded-lg border border-gray-300">
+                            <h2 className="text-xl font-semibold text-black mb-6">Clients by Province</h2>
+                            <div className="h-64">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <PieChart>
+                                        <Pie
+                                            data={dashboardData?.clientsByProvince}
+                                            cx="50%"
+                                            cy="50%"
+                                            labelLine={false}
+                                            outerRadius={80}
+                                            fill="#000000"
+                                            dataKey="value"
+                                        >
+                                            {dashboardData?.clientsByProvince?.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={pieColors[index % pieColors.length]} />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip
+                                            contentStyle={{
+                                                backgroundColor: '#ffffff',
+                                                border: '1px solid #000000',
+                                                borderRadius: '6px',
+                                                color: '#000000'
+                                            }}
+                                        />
+                                        <Legend wrapperStyle={{ color: '#94a3b8' }} />
+                                    </PieChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </div>
+
+                    </div>
+
                     {/* Top Consultants */}
                     <div className="bg-white p-6 rounded-lg border border-gray-300">
                         <h2 className="text-xl font-semibold text-black mb-6">Top Consultants by Clients</h2>
@@ -309,10 +459,10 @@ const Dashboard: React.FC = () => {
                                         </div>
                                         <div>
                                             <p className="font-medium">{consultant.displayName}</p>
-                                            <p className="text-slate-400 text-sm">ID: {consultant.consultantId.slice(-8)}</p>
+                                            <p className="text-slate-400 text-sm">ID: {consultant.consultantId}</p>
                                         </div>
                                     </div>
-                                    <div className="text-right">
+                                    <div className="flex items-center gap-2 text-right">
                                         <p className="font-semibold">{consultant.clients}</p>
                                         <p className="text-slate-400 text-sm">clients</p>
                                     </div>

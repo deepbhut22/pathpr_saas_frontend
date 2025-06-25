@@ -373,7 +373,41 @@ const Dashboard: React.FC = () => {
                                     </BarChart>
                                 </ResponsiveContainer>
                             </div>
+                            {/* Province Pie Chart */}
+                            {/* <div className="col-span-1 lg:col-span-2 bg-white p-6 rounded-lg border border-gray-300">
+                                <h2 className="text-xl font-semibold text-black mb-6">Clients by Province</h2>
+                                <div className="h-64">
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <PieChart>
+                                            <Pie
+                                                data={dashboardData?.clientsByProvince}
+                                                cx="50%"
+                                                cy="50%"
+                                                labelLine={false}
+                                                outerRadius={80}
+                                                fill="#000000"
+                                                dataKey="value"
+                                            >
+                                                {dashboardData?.clientsByProvince?.map((entry, index) => (
+                                                    <Cell key={`cell-${index}`} fill={pieColors[index % pieColors.length]} />
+                                                ))}
+                                            </Pie>
+                                            <Tooltip
+                                                contentStyle={{
+                                                    backgroundColor: '#ffffff',
+                                                    border: '1px solid #000000',
+                                                    borderRadius: '6px',
+                                                    color: '#000000'
+                                                }}
+                                            />
+                                            <Legend wrapperStyle={{ color: '#94a3b8' }} />
+                                        </PieChart>
+                                    </ResponsiveContainer>
+                                </div>
+                            </div> */}
                         </div>
+
+
 
                         {/* CRS Score Distribution Line Chart */}
                         <div className="bg-white p-6 rounded-lg border border-gray-200">
@@ -411,40 +445,6 @@ const Dashboard: React.FC = () => {
                                 </ResponsiveContainer>
                             </div>
                         </div>
-
-                        {/* Province Pie Chart */}
-                        <div className="col-span-1 lg:col-span-2 bg-white p-6 rounded-lg border border-gray-300">
-                            <h2 className="text-xl font-semibold text-black mb-6">Clients by Province</h2>
-                            <div className="h-64">
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <PieChart>
-                                        <Pie
-                                            data={dashboardData?.clientsByProvince}
-                                            cx="50%"
-                                            cy="50%"
-                                            labelLine={false}
-                                            outerRadius={80}
-                                            fill="#000000"
-                                            dataKey="value"
-                                        >
-                                            {dashboardData?.clientsByProvince?.map((entry, index) => (
-                                                <Cell key={`cell-${index}`} fill={pieColors[index % pieColors.length]} />
-                                            ))}
-                                        </Pie>
-                                        <Tooltip
-                                            contentStyle={{
-                                                backgroundColor: '#ffffff',
-                                                border: '1px solid #000000',
-                                                borderRadius: '6px',
-                                                color: '#000000'
-                                            }}
-                                        />
-                                        <Legend wrapperStyle={{ color: '#94a3b8' }} />
-                                    </PieChart>
-                                </ResponsiveContainer>
-                            </div>
-                        </div>
-
                     </div>
 
                     {/* Top Consultants */}

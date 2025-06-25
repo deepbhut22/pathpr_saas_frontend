@@ -66,7 +66,7 @@ const Dashboard: React.FC = () => {
 
     const handleLanguageChange = (e: any) => {
         setSelectedLanguage(e.target.value);
-        if (dashboardData.clbScoreDistribution[0]._id === e.target.value) {
+        if (dashboardData.clbScoreDistribution[0]._id === e.target.value.toLowerCase()) {
             setClbData(dashboardData.clbScoreDistribution[0].distribution)
         } else {
             setClbData(dashboardData.clbScoreDistribution[0].distribution)

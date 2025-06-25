@@ -54,10 +54,10 @@ const Sidebar = ({ firmSlug }: SidebarProps) => {
         current: location.pathname === `/${firmSlug}/firm-settings`,
       },
       {
-        name: 'Dashboard',
-        href: `/${firmSlug}/dashboard`,
+        name: 'Owner Dashboard',
+        href: `/${firmSlug}/owner-dashboard`,
         icon: BarChart3,
-        current: location.pathname === `/${firmSlug}/dashboard`,
+        current: location.pathname === `/${firmSlug}/owner-dashboard`,
       },
     ] : []),
     {

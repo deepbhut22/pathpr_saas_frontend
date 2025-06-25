@@ -20,6 +20,7 @@ import FirmSettings from "./pages/FirmSettings";
 import ClientSuccessPage from "./pages/ClientSuccessPage";
 import ClientUpdateForm from "./components/clients/ClientUpdateForm";
 import PNPResourcesPage from "./pages/PNPResourcePaage";
+import OwnerDashboardPage from "./pages/OwnerDashboardPage";
   // import './App.css';
 const queryClient = new QueryClient();
 
@@ -106,6 +107,15 @@ const App = () => {
                 element={
                   <ProtectedRoute>
                     <FirmSettings />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/:firmSlug/owner-dashboard"
+                element={
+                  <ProtectedRoute>
+                    <OwnerDashboardPage />
                   </ProtectedRoute>
                 }
               />

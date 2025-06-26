@@ -3,10 +3,10 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { Users, FileText, UserCheck, TrendingUp, Target, Clock } from 'lucide-react';
 import Sidebar from '@/components/layout/Sidebar';
 import { useParams } from 'react-router-dom';
-import { dashboardAPI } from '@/services/api';
+import { consultantsAPI, dashboardAPI } from '@/services/api';
 import { useAuthStore } from '@/stores/authStore';
-import { previousDay } from 'date-fns';
-import { Value } from '@radix-ui/react-select';
+import { downloadUserDataAsExcel } from '@/utils/downloadExcelFile';
+import { Button } from '@/components/ui/button';
 
 interface DashboardData {
     totals: {
@@ -62,6 +62,24 @@ const Dashboard: React.FC = () => {
         clb: string;
         value: number;
     }>>([]);
+
+    const handleDownloadUserData = async () => {
+        const data = await consultantsAPI.downloadUserData();
+        if (Array.isArray(data)) {
+            downloadUserDataAsExcel(data, "ClientData.xlsx")
+        } else {
+            alert('invalid data received.')
+        }
+    }
+
+    const handleDownloadFullUserData = async () => {
+        const data = await consultantsAPI.downloadFullUserdata();
+        if (Array.isArray(data)) {
+            downloadUserDataAsExcel(data, "ClientFullData.xlsx")
+        } else {
+            alert('invalid data received.')
+        }
+    }
 
 
     const handleLanguageChange = (e: any) => {
@@ -204,8 +222,23 @@ const Dashboard: React.FC = () => {
             <Sidebar firmSlug={firmSlug} />
             <div className="min-h-screen bg-gray-100 p-6 ml-64">
                 <div className="max-w-7xl mx-auto">
-                    <h1 className="text-3xl font-bold mb-8">Dashboard Analytics</h1>
+                    <div className='flex justify-between w-full items-center mb-8'>
+                        <h1 className="text-3xl font-bold">Dashboard Analytics</h1>
+                        <div className='flex gap-5'>
+                            <Button
+                                onClick={handleDownloadUserData}
+                            >
+                                Download Client Data
+                            </Button>
 
+                            <Button
+                                onClick={handleDownloadFullUserData}
+                            >
+                                Download Full Client Data
+                            </Button>
+                        </div>
+
+                    </div>
                     {/* Statistics Cards */}
                     <div className="flex flex-wrap gap-6 mb-8 w-full justify-center">
                         <StatCard

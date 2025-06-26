@@ -221,6 +221,16 @@ export const consultantsAPI = {
     console.log(response);
     
     return response.data.data;
+  },
+
+  downloadUserData: async (): Promise<any> => {
+    const response = await api.get('/consultants/get-excel-user-data');
+    return response.data;
+  },
+
+  downloadFullUserdata: async (): Promise<any> => {
+    const response = await api.get('/consultants/get-excel-user-and-report-data');
+    return response.data;
   }
 };
 

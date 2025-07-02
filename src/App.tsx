@@ -21,6 +21,7 @@ import ClientSuccessPage from "./pages/ClientSuccessPage";
 import ClientUpdateForm from "./components/clients/ClientUpdateForm";
 import PNPResourcesPage from "./pages/PNPResourcePaage";
 import OwnerDashboardPage from "./pages/OwnerDashboardPage";
+import ConsultantDashboard from "./pages/ConsultantDashboardPage";
   // import './App.css';
 const queryClient = new QueryClient();
 
@@ -116,6 +117,15 @@ const App = () => {
                 element={
                   <ProtectedRoute>
                     <OwnerDashboardPage />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/:firmSlug/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <ConsultantDashboard />
                   </ProtectedRoute>
                 }
               />

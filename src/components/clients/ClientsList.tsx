@@ -236,7 +236,7 @@ const ClientsList = ({
             {pagination.page > 1 && (
               <PaginationItem>
                 <PaginationPrevious 
-                  onClick={() => setFilters({ ...filters })} 
+                  onClick={() => setFilters({ ...filters, page: pagination.page - 1 })}
                 />
               </PaginationItem>
             )}
@@ -244,7 +244,7 @@ const ClientsList = ({
             {[...Array(totalPages)].map((_, i) => (
               <PaginationItem key={i + 1}>
                 <PaginationLink
-                  onClick={() => setFilters({ ...filters })}
+                  onClick={() => setFilters({ ...filters, page: i + 1 })}
                   isActive={pagination.page === i + 1}
                 >
                   {i + 1}
@@ -255,7 +255,7 @@ const ClientsList = ({
             {pagination.page < totalPages && (
               <PaginationItem>
                 <PaginationNext 
-                  onClick={() => setFilters({ ...filters })} 
+                  onClick={() => setFilters({ ...filters, page: pagination.page + 1 })}
                 />
               </PaginationItem>
             )}

@@ -58,10 +58,10 @@ const Dashboard: React.FC = () => {
     const [dashboardData, setDashboardData] = useState<DashboardData>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [selectedLanguage, setSelectedLanguage] = useState<'english' | 'french'>('english');
-    const [clbData, setClbData] = useState<Array<{
-        clb: string;
-        value: number;
-    }>>([]);
+    // const [clbData, setClbData] = useState<Array<{
+    //     clb: string;
+    //     value: number;
+    // }>>([]);
 
     const handleDownloadUserData = async () => {
         const data = await consultantsAPI.downloadUserData();
@@ -84,11 +84,11 @@ const Dashboard: React.FC = () => {
 
     const handleLanguageChange = (e: any) => {
         setSelectedLanguage(e.target.value);
-        if (dashboardData.clbScoreDistribution[0]._id === e.target.value.toLowerCase()) {
-            setClbData(dashboardData.clbScoreDistribution[0].distribution)
-        } else {
-            setClbData(dashboardData.clbScoreDistribution[0].distribution)
-        }
+        // if (dashboardData.clbScoreDistribution[0]._id === e.target.value.toLowerCase()) {
+        //     setSelectedLanguage(dashboardData.clbScoreDistribution[0].distribution)
+        // } else {
+        //     setSelectedLanguage(dashboardData.clbScoreDistribution[0].distribution)
+        // }
     }
 
 
@@ -100,9 +100,10 @@ const Dashboard: React.FC = () => {
         const response = await dashboardAPI.getOwnerDashboardData(firm?._id);
         console.log(response);
         setDashboardData(response);
-        setClbData(response.clbScoreDistribution[1].distribution)
+        // setClbData(response.clbScoreDistribution[1].distribution as string)
         setIsLoading(false);
     }
+
 
     useEffect(() => {
         fetchDashboardData();
@@ -190,6 +191,9 @@ const Dashboard: React.FC = () => {
             ? new Date(item.date + '-01').toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
             : item.date
     }));
+
+    const clbData = dashboardData?.clbScoreDistribution?.find(item => item._id === selectedLanguage)?.distribution || [];
+
 
     // Format province data for pie chart
     const provinceData = dashboardData?.clientsByProvince?.map(item => ({

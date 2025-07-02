@@ -242,7 +242,7 @@ const ClientsList = ({
             )}
             
             {[...Array(totalPages)].map((_, i) => (
-              <PaginationItem key={i + 1}>
+              <PaginationItem key={i + 1} className='cursor-pointer'>
                 <PaginationLink
                   onClick={() => setFilters({ ...filters, page: i + 1 })}
                   isActive={pagination.page === i + 1}
@@ -253,7 +253,7 @@ const ClientsList = ({
             ))}
             
             {pagination.page < totalPages && (
-              <PaginationItem>
+              <PaginationItem className='cursor-pointer'>
                 <PaginationNext 
                   onClick={() => setFilters({ ...filters, page: pagination.page + 1 })}
                 />

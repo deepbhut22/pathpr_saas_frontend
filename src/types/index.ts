@@ -333,6 +333,7 @@ export interface ClientFilters {
   dateTo?: string;
   sortBy?: 'name' | 'email' | 'createdAt';
   sortOrder?: 'asc' | 'desc';
+  page?: number;
 }
 
 export interface ConsultantFilters {

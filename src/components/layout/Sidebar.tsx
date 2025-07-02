@@ -66,12 +66,13 @@ const Sidebar = ({ firmSlug }: SidebarProps) => {
       icon: BookOpen,
       current: location.pathname === `/${firmSlug}/pnp-resources`,
     },
-    {
+    ...(!isOwner ? [{
       name: 'Dashboard',
       href: `/${firmSlug}/dashboard`,
       icon: BarChart3,
       current: location.pathname === `/${firmSlug}/dashboard`,
-    },
+    }] : []),
+
   ];
 
   const handleLogout = () => {

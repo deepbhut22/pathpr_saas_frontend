@@ -239,6 +239,11 @@ export const dashboardAPI = {
     const response = await api.get(`/consultants/owner-dashboard/${firmId}`);
     return response.data;
   },
+
+  getConsultantDashboardData: async (): Promise<any> => {
+    const response = await api.get('consultants/dashboard');
+    return response.data;
+  }
 };
 
 

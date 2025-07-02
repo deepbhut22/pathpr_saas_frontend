@@ -1,85 +1,108 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, BarChart, Bar } from 'recharts';
 import { Users, FileText, TrendingUp, Target, Clock, Calendar } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import Sidebar from '@/components/layout/Sidebar';
+import { dashboardAPI } from '@/services/api';
 
 const ConsultantDashboard = () => {
     const [growthPeriod, setGrowthPeriod] = useState('monthly');
     const [selectedLanguage, setSelectedLanguage] = useState('english');
+    const [isLoading, setIsLoading] = useState(false);
+    const [dashboardData, setDashboardData] = useState(null);
     const { firmSlug } = useParams();
 
     // API data
-    const dashboardData = {
-        "totals": {
-            "clients": 5,
-            "reports": 6
-        },
-        "averages": {
-            "reportsPerClient": 1.2
-        },
-        "recency": {
-            "lastReportAt": "2025-06-20T19:41:16.882Z"
-        },
-        "clientGrowth": {
-            "monthly": [
-                {
-                    "count": 5,
-                    "month": "2025-06"
-                }
-            ],
-            "weekly": [
-                {
-                    "count": 3,
-                    "week": "2025-W24"
-                },
-                {
-                    "count": 2,
-                    "week": "2025-W25"
-                }
-            ]
-        },
-        "clientsByProvince": [
-            {
-                "value": 5,
-                "province": ""
-            }
-        ],
-        "clbScoreDistribution": [
-            {
-                "_id": "english",
-                "distribution": [
-                    {
-                        "clb": 7,
-                        "value": 1
-                    }
-                ]
-            },
-            {
-                "_id": "french",
-                "distribution": [
-                    {
-                        "clb": 8,
-                        "value": 1
-                    }
-                ]
-            }
-        ],
-        "crsDistribution": [
-            {
-                "value": 1,
-                "range": "0-99"
-            },
-            {
-                "value": 4,
-                "range": "100-199"
-            },
-            {
-                "value": 1,
-                "range": "200-299"
-            }
-        ]
-    };
+    // const dashboardData = {
+    //     "totals": {
+    //         "clients": 5,
+    //         "reports": 6
+    //     },
+    //     "averages": {
+    //         "reportsPerClient": 1.2
+    //     },
+    //     "recency": {
+    //         "lastReportAt": "2025-06-20T19:41:16.882Z"
+    //     },
+    //     "clientGrowth": {
+    //         "monthly": [
+    //             {
+    //                 "count": 5,
+    //                 "month": "2025-06"
+    //             }
+    //         ],
+    //         "weekly": [
+    //             {
+    //                 "count": 3,
+    //                 "week": "2025-W24"
+    //             },
+    //             {
+    //                 "count": 2,
+    //                 "week": "2025-W25"
+    //             }
+    //         ]
+    //     },
+    //     "clientsByProvince": [
+    //         {
+    //             "value": 5,
+    //             "province": ""
+    //         }
+    //     ],
+    //     "clbScoreDistribution": [
+    //         {
+    //             "_id": "english",
+    //             "distribution": [
+    //                 {
+    //                     "clb": 7,
+    //                     "value": 1
+    //                 }
+    //             ]
+    //         },
+    //         {
+    //             "_id": "french",
+    //             "distribution": [
+    //                 {
+    //                     "clb": 8,
+    //                     "value": 1
+    //                 }
+    //             ]
+    //         }
+    //     ],
+    //     "crsDistribution": [
+    //         {
+    //             "value": 1,
+    //             "range": "0-99"
+    //         },
+    //         {
+    //             "value": 4,
+    //             "range": "100-199"
+    //         },
+    //         {
+    //             "value": 1,
+    //             "range": "200-299"
+    //         }
+    //     ]
+    // };
+
+    const fetchData = async () => {
+        setIsLoading(true);
+        try {
+            const data = await dashboardAPI.getConsultantDashboardData();
+            console.log(data);
+            setDashboardData(data)
+        } catch (error) {
+            console.log(error);
+            return null;
+        } finally {
+            setIsLoading(false);
+            return null;
+        }
+    }
+
+    useEffect(() => {
+        const data = fetchData();
+        // fetchData()
+    },[])
 
     // Colors for pie chart - matching your theme
     const pieColors = [
@@ -89,7 +112,7 @@ const ConsultantDashboard = () => {
     ];
 
     // Format growth data for chart
-    const growthData = dashboardData.clientGrowth[growthPeriod]?.map(item => ({
+    const growthData = dashboardData?.clientGrowth[growthPeriod]?.map(item => ({
         ...item,
         value: item.count,
         displayDate: growthPeriod === 'monthly'
@@ -98,13 +121,13 @@ const ConsultantDashboard = () => {
     }));
 
     // Format province data for pie chart
-    const provinceData = dashboardData.clientsByProvince?.map(item => ({
+    const provinceData = dashboardData?.clientsByProvince?.map(item => ({
         name: item.province || 'Not Specified',
         value: item.value
     }));
 
     // Get CLB data based on selected language
-    const clbData = dashboardData.clbScoreDistribution.find(item => item._id === selectedLanguage)?.distribution || [];
+    const clbData = dashboardData?.clbScoreDistribution?.find(item => item._id === selectedLanguage)?.distribution || [];
 
     // Format last report date
     const formatLastReportDate = (dateString) => {
@@ -131,6 +154,10 @@ const ConsultantDashboard = () => {
         </div>
     );
 
+    if (isLoading) {
+        return <div>Loading...</div>
+    }
+
     return (
         <>
             <Sidebar firmSlug={firmSlug}/>
@@ -140,20 +167,19 @@ const ConsultantDashboard = () => {
                         <h1 className="text-3xl font-bold">Dashboard Analytics</h1>
                     </div>
 
-                    {/* Statistics Cards */}
                     <div className="flex flex-wrap gap-6 mb-8 w-full justify-center">
                         <StatCard
                             title="Total Clients"
-                            value={dashboardData.totals.clients}
-                            icon={<Users size={24} />} subtitle={undefined}                    />
+                            value={dashboardData?.totals?.clients}
+                            icon={<Users size={24} />} subtitle={undefined} />
                         <StatCard
                             title="Total Reports"
-                            value={dashboardData.totals.reports}
-                            icon={<FileText size={24} />} subtitle={undefined}                    />
+                            value={dashboardData?.totals?.reports}
+                            icon={<FileText size={24} />} subtitle={undefined} />
                         <StatCard
                             title="Avg Reports/Client"
-                            value={dashboardData.averages.reportsPerClient.toFixed(1)}
-                            icon={<TrendingUp size={24} />} subtitle={undefined}                    />
+                            value={dashboardData?.averages?.reportsPerClient?.toFixed(1)}
+                            icon={<TrendingUp size={24} />} subtitle={undefined} />
                         {/* <StatCard
                             title="Last Report"
                             value={formatLastReportDate(dashboardData.recency.lastReportAt)}
@@ -298,7 +324,7 @@ const ConsultantDashboard = () => {
                             <h2 className="text-xl font-semibold text-black mb-6">CRS Score Distribution</h2>
                             <div className="h-64">
                                 <ResponsiveContainer width="100%" height="100%">
-                                    <LineChart data={dashboardData.crsDistribution}>
+                                    <LineChart data={dashboardData?.crsDistribution}>
                                         <CartesianGrid strokeDasharray="3 3" stroke="#000000" />
                                         <XAxis
                                             dataKey="range"
